@@ -1,7 +1,7 @@
 #ifndef RIVERTREE_HPP
 #define RIVERTREE_HPP
 #include<string>
-
+/*
 struct Tributary{
     std::string name;           // Name of the tributary
     int location[2];            // Array for location, (coordinates) not sure if needed but could help to structure the tree
@@ -13,17 +13,22 @@ struct Dam{
     int location[2];            // Location (coordinates), could help with structuring
 
 };
+*/
 struct RiverNode{
-    int type;                   // Correlates to type of node, either a dam or a tributary
+    std::string type;           // Correlates to type of node, either a dam or a tributary
+    std::string name;
+    int length;                 // For tributaries
     RiverNode* left;            // Left and right pointers to maintain tree structure
     RiverNode* right;           // Right pointer
 
-    Tributary trib;             // Not sure if need both right now, but idea is that can have 2 different types of nodes
-    Dam dam;                    // Dam ^
+    //Tributary trib;             // Not sure if need both right now, but idea is that can have 2 different types of nodes
+    //Dam dam;                    // Dam ^
 
-    RiverNode();                // Constructors and destructors for handling creating a node: How do we handle to types of nodes
-//  RiverNode(int type)         // Overloading (two different types?)
-    ~RiverNode();               // No need for destructor? Nothing is deleted from river
+    RiverNode();  
+    RiverNode(std::string name);               // Constructors and destructors for handling creating a node: How do we handle to types of nodes
+    RiverNode(std::string name, int length);
+
+    ~RiverNode();                            // No need for destructor? Nothing is deleted from river
 
 };
 class RiverTree{
