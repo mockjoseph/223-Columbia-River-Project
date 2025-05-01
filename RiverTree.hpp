@@ -34,11 +34,13 @@ struct RiverNode{
     RiverNode* right;           // Right pointer
     Dam* dam;                   // Dam pointer, 
     Tributary* trib;            // Tributary pointer, river nodes will only contain one, oher will be nullptr
+    
+    char name[14] = {'C', 'o', 'l', 'u', 'm', 'b', 'i', 'a', ' ', 'R', 'i', 'v', 'e', 'r'};
 
     RiverNode();  
     RiverNode(int type);               // Constructors and destructors for handling creating a node: How do we handle to types of nodes
 
-    ~RiverNode();                            // No need for destructor? Nothing is deleted from river
+   // ~RiverNode();                            // No need for destructor? Nothing is deleted from river
     
 };
 class RiverTree{
@@ -51,6 +53,7 @@ class RiverTree{
         void print_tribs(RiverNode* node);
         void print_dams(RiverNode* node);
     public:
+        RiverTree();
         void traverse_to(std::string name);     // For traversing, name can represent either a dam or a tributary
         void traverse_to(int location[2]);      // can traverse to a location, get what is there.
         void add_tributary();                   // For adding / inserting, not sure if needed because the river is always the same

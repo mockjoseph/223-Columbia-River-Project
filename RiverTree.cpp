@@ -55,11 +55,14 @@ Tributary::Tributary(char name[100], int length, int basinSize, int averageDisch
 }
 */
 RiverNode::RiverNode(){
-    this->dam = new Dam();
-    this->trib = new Tributary();
+    this->dam = nullptr;
+    this->trib = nullptr;
     this->left = nullptr;
     this->right = nullptr;
+    
 }
+
+
 
 // RIVERNODE Constructor, type is 1 for tributary node, 2 is dam node
 RiverNode::RiverNode(int type){
@@ -74,44 +77,42 @@ RiverNode::RiverNode(int type){
         this->left = nullptr;
         this->right = nullptr;
 
-    }else{
+    }else if (type == 0){
+        // Root / mouth
+
+        }else{
         RiverNode();
     }
     
 }
+RiverTree::RiverTree(){
+    root = new RiverNode();
+}
 void RiverTree::print_dam(RiverNode* node){
-    for(int i = 0; i < 100; ++i){
-        if(node->dam->name[i] == '\0'){
-            break;
-        }
-        std::cout << node->dam->name;
-    }
-    std::cout << std::endl;
+    std::cout << node->dam->name << std::endl;
 }
 void RiverTree::print_dams(RiverNode* node){
     if(node == nullptr){
         return;
     }
+    print_dams(node->left);
+    print_dams(node->right);
     if(node->dam){
         print_dam(node);
     }
-    print_dams(node->left);
-    print_dams(node->right);
+    
 }
 void RiverTree::print_dams(){
     print_dams(root);
 }
 void RiverTree::print_trib(RiverNode* node){
-    for(int i = 0; i < 100; ++i){
-        if(node->trib->name[i] == '\0'){
-            break;
-        }
-        std::cout << node->trib->name[i];
-    }
+    std::cout << "_________________________" << std::endl;
+    std::cout << node->trib->name << std::endl;
     std::cout << std::endl;
     std::cout << "Length: " << node->trib->length << std::endl;
-    std::cout << "Basin Size" << node->trib->basinSize << std::endl;
-    std::cout << "Average Discharge" << node->trib->averageDischarge << std::endl;
+    std::cout << "Basin Size: " << node->trib->basinSize << std::endl;
+    std::cout << "Average Discharge: " << node->trib->averageDischarge << std::endl;
+    std::cout << "------------------------" << std::endl;
 }
 void RiverTree::print_tribs(){
     print_tribs(root);
@@ -149,9 +150,9 @@ void RiverTree::add_tributary(RiverNode* node){
         RiverNode* new_trib = new RiverNode(1);
         node->left = new_trib;
     }else if(node->right != nullptr){
-        add_tributary(node);
+        add_tributary(node->right);
     }else if(node->left != nullptr){
-        add_tributary(node);
+        add_tributary(node->left);
     }
     return;
 }
