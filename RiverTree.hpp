@@ -47,7 +47,7 @@ class RiverTree{
         void add_dam(char name[100]);        // helper functions?...
         void add_dam(RiverNode* node);
         void add_tributary(std::string name, int location[2]);
-        void add_tributary(RiverNode* new_trib, RiverNode* node);
+        void add_tributary(RiverNode* new_trib);
     public:
         void traverse_to(std::string name);     // For traversing, name can represent either a dam or a tributary
         void traverse_to(int location[2]);      // can traverse to a location, get what is there.

@@ -73,39 +73,35 @@ RiverNode::RiverNode(int type){
     }
     
 }
-void RiverTree::add_dam(){
-    add_dam(root);
-}
-void RiverTree::add_dam(RiverNode* node){
-    if(node == nullptr){
-        RiverNode* new_dam = new RiverNode(2);
-        node = new_dam;
-        return;
-    }else{
-        // Traverse further left, (Dams)
-        add_dam(node->left);
-    }
 
-    return;
-}
-void RiverTree::add_tributary(){
-    RiverNode* new_trib = new RiverNode(1);
-    if(root->right->dam == nullptr){
-        root->right = new_trib;
-    }
-    add_tributary(new_trib, root->right);
-}
-void RiverTree::add_tributary(RiverNode* new_trib, RiverNode* node){
-    if(node == nullptr){
-        node = new_trib;
-        return;
-    }else if (new_trib->trib->length < node->trib->length){
-        add_tributary(node->left, new_trib);
-    }else if (new_trib->trib->length > node->trib->length){
-        add_tributary(node->right, new_trib);
-    }
-}
 void RiverTree::print_tribs(){
 
 }
 
+void RiverTree::add_dam(){
+    add_dam(root);
+}   
+void RiverTree::add_dam(RiverNode* node){
+    if(node->left == nullptr && node->right == nullptr){
+        RiverNode* new_dam = new RiverNode(2);
+        node->right = new_dam;
+    }else if(node->right != nullptr){
+        add_dam(node->right);
+    }else if(node->left != nullptr){
+        add_dam(node->left);
+    }
+
+}
+void RiverTree::add_tributary(){
+    add_tributary(root);
+}
+void RiverTree::add_tributary(RiverNode* node){
+    if(node->left == nullptr && node->right == nullptr){
+        RiverNode* new_trib = new RiverNode(1);
+        node->left = new_trib;
+    }else if(node->right != nullptr){
+        add_tributary(node);
+    }else if(node->left != nullptr){
+        add_tributary(node);
+    }
+}
