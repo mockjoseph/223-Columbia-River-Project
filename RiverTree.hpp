@@ -53,6 +53,7 @@ class RiverTree{
         void traverse_to(int location[2]);      // can traverse to a location, get what is there.
         void add_tributary();                   // For adding / inserting, not sure if needed because the river is always the same
         void add_dam();
+        void print_tribs();
         
 
 

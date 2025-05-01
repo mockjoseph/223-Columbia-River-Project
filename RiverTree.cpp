@@ -54,6 +54,7 @@ RiverNode::RiverNode(){
     this->left = nullptr;
     this->right = nullptr;
 }
+
 // RIVERNODE Constructor, type is 1 for tributary node, 2 is dam node
 RiverNode::RiverNode(int type){
     if(type == 1){
@@ -84,6 +85,7 @@ void RiverTree::add_dam(RiverNode* node){
         // Traverse further left, (Dams)
         add_dam(node->left);
     }
+
     return;
 }
 void RiverTree::add_tributary(){
@@ -97,10 +99,13 @@ void RiverTree::add_tributary(RiverNode* new_trib, RiverNode* node){
     if(node == nullptr){
         node = new_trib;
         return;
-    }else if (new_trib->trib->basinSize < node->trib->basinSize){
+    }else if (new_trib->trib->length < node->trib->length){
         add_tributary(node->left, new_trib);
-    }else if (new_trib->trib->basinSize > node->trib->basinSize){
+    }else if (new_trib->trib->length > node->trib->length){
         add_tributary(node->right, new_trib);
     }
+}
+void RiverTree::print_tribs(){
+
 }
 
