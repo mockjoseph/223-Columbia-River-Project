@@ -24,7 +24,8 @@ Dam::Dam(char name[]){
 }*/
 Tributary::Tributary(){
     std::string nameOfTrib = "";
-    std::cout << "What is the name of the dam?" << std::endl;
+    std::string trash;
+    std::cout << "What is the name of the tributary?" << std::endl;
     std::getline(std::cin, nameOfTrib);
     for(int i = 0; i < 99; ++i){
         if(i < nameOfTrib.size()){
@@ -33,10 +34,15 @@ Tributary::Tributary(){
             name[i] = '\0';
         }
     }
-    name;
-    length = 0;
-    basinSize = 0;
-    averageDischarge = 0;
+    std::cout << "Length?" << std::endl;
+    std::cin >> length;
+    std::getline(std::cin, trash);
+    std::cout << "Basin Size?" << std::endl;
+    std::cin >> basinSize;
+    std::getline(std::cin, trash);
+    std::cout << "Average Discharge?" << std::endl;
+    std::cin >> averageDischarge;
+    
 }
 /*
 Tributary::Tributary(char name[100], int length, int basinSize, int averageDischarge){
@@ -73,9 +79,52 @@ RiverNode::RiverNode(int type){
     }
     
 }
-
+void RiverTree::print_dam(RiverNode* node){
+    for(int i = 0; i < 100; ++i){
+        if(node->dam->name[i] == '\0'){
+            break;
+        }
+        std::cout << node->dam->name;
+    }
+    std::cout << std::endl;
+}
+void RiverTree::print_dams(RiverNode* node){
+    if(node == nullptr){
+        return;
+    }
+    if(node->dam){
+        print_dam(node);
+    }
+    print_dams(node->left);
+    print_dams(node->right);
+}
+void RiverTree::print_dams(){
+    print_dams(root);
+}
+void RiverTree::print_trib(RiverNode* node){
+    for(int i = 0; i < 100; ++i){
+        if(node->trib->name[i] == '\0'){
+            break;
+        }
+        std::cout << node->trib->name[i];
+    }
+    std::cout << std::endl;
+    std::cout << "Length: " << node->trib->length << std::endl;
+    std::cout << "Basin Size" << node->trib->basinSize << std::endl;
+    std::cout << "Average Discharge" << node->trib->averageDischarge << std::endl;
+}
 void RiverTree::print_tribs(){
-
+    print_tribs(root);
+}
+void RiverTree::print_tribs(RiverNode* node){
+    if(node == nullptr){
+        return;
+    }
+    if(node->trib){
+        print_trib(node);
+    }
+    print_tribs(node->left);
+    print_tribs(node->right);
 }
 
 void RiverTree::add_dam(){
@@ -90,7 +139,7 @@ void RiverTree::add_dam(RiverNode* node){
     }else if(node->left != nullptr){
         add_dam(node->left);
     }
-
+    return;
 }
 void RiverTree::add_tributary(){
     add_tributary(root);
@@ -104,4 +153,5 @@ void RiverTree::add_tributary(RiverNode* node){
     }else if(node->left != nullptr){
         add_tributary(node);
     }
+    return;
 }
