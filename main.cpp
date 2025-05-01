@@ -4,8 +4,10 @@ int main(){
     RiverTree tree;
     tree.add_dam();
     //tree.print_dams();
-    tree.add_tributary();
+    tree.add(1);
+    tree.add(0);
+    tree.add(1);
     tree.print_tribs();
-
+    tree.print_dams();
     return 0;
 }

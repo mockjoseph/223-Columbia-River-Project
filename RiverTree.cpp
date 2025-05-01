@@ -89,17 +89,20 @@ RiverTree::RiverTree(){
     root = new RiverNode();
 }
 void RiverTree::print_dam(RiverNode* node){
+    std::cout << "_______________" << std::endl;
     std::cout << node->dam->name << std::endl;
+    std::cout << "----------------" << std::endl;
 }
 void RiverTree::print_dams(RiverNode* node){
     if(node == nullptr){
         return;
     }
-    print_dams(node->left);
-    print_dams(node->right);
+    
     if(node->dam){
         print_dam(node);
     }
+    print_dams(node->left);
+    print_dams(node->right);
     
 }
 void RiverTree::print_dams(){
@@ -131,28 +134,47 @@ void RiverTree::print_tribs(RiverNode* node){
 void RiverTree::add_dam(){
     add_dam(root);
 }   
-void RiverTree::add_dam(RiverNode* node){
+RiverNode* RiverTree::add_dam(RiverNode* node){
     if(node->left == nullptr && node->right == nullptr){
         RiverNode* new_dam = new RiverNode(2);
         node->right = new_dam;
+        return new_dam;
     }else if(node->right != nullptr){
         add_dam(node->right);
     }else if(node->left != nullptr){
         add_dam(node->left);
     }
-    return;
+    //return;
 }
 void RiverTree::add_tributary(){
     add_tributary(root);
 }
-void RiverTree::add_tributary(RiverNode* node){
+RiverNode* RiverTree::add_tributary(RiverNode* node){
     if(node->left == nullptr && node->right == nullptr){
         RiverNode* new_trib = new RiverNode(1);
         node->left = new_trib;
+        return new_trib;
     }else if(node->right != nullptr){
         add_tributary(node->right);
     }else if(node->left != nullptr){
         add_tributary(node->left);
     }
-    return;
+    
 }
+
+// Function that I think could help with binary file:
+void RiverTree::add(int val){
+    // 1 for dam adding, 0 tributary adding
+    RiverNode* new_node;
+    if(val == 1){
+        new_node = add_dam(root);
+    }if(val == 0){
+        new_node = add_tributary(root);
+    }
+    // Write new node to binary file, should contain all infromation based on the node that has been added
+    // Only issue is that the root will need to be written when I defined it in the tree constructior
+}
+
+
+
+

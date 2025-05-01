@@ -39,7 +39,7 @@ struct RiverNode{
 
     RiverNode();  
     RiverNode(int type);               // Constructors and destructors for handling creating a node: How do we handle to types of nodes
-
+    RiverNode(Dam* dam, Tributary* trib);
    // ~RiverNode();                            // No need for destructor? Nothing is deleted from river
     
 };
@@ -47,13 +47,14 @@ class RiverTree{
     private:
         RiverNode* root;        // Root will represent the mouth of the columbia river
         void add_dam(char name[100]);        // helper functions?...
-        void add_dam(RiverNode* node);
+        RiverNode* add_dam(RiverNode* node);
         void add_tributary(std::string name, int location[2]);
-        void add_tributary(RiverNode* new_trib);
+        RiverNode* add_tributary(RiverNode* new_trib);
         void print_tribs(RiverNode* node);
         void print_dams(RiverNode* node);
     public:
         RiverTree();
+        RiverTree(int val);
         void traverse_to(std::string name);     // For traversing, name can represent either a dam or a tributary
         void traverse_to(int location[2]);      // can traverse to a location, get what is there.
         void add_tributary();                   // For adding / inserting, not sure if needed because the river is always the same
@@ -62,6 +63,7 @@ class RiverTree{
         void print_trib(RiverNode* node);
         void print_dam(RiverNode* node);
         void print_dams();
+        void add(int val);
         
 
 
