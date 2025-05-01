@@ -88,18 +88,19 @@ void RiverTree::add_dam(RiverNode* node){
 }
 void RiverTree::add_tributary(){
     RiverNode* new_trib = new RiverNode(1);
-    add_tributary(new_trib);
+    if(root->right->dam == nullptr){
+        root->right = new_trib;
+    }
+    add_tributary(new_trib, root->right);
 }
-void RiverTree::add_tributary(RiverNode* node){
+void RiverTree::add_tributary(RiverNode* new_trib, RiverNode* node){
     if(node == nullptr){
-        RiverNode* new_trib = new RiverNode(1);
         node = new_trib;
         return;
-    }else{
-        // Traverse further right for tributarys
-        add_tributary(node->right);
+    }else if (new_trib->trib->basinSize < node->trib->basinSize){
+        add_tributary(node->left, new_trib);
+    }else if (new_trib->trib->basinSize > node->trib->basinSize){
+        add_tributary(node->right, new_trib);
     }
-    
-    return;
 }
 
