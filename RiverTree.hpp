@@ -1,28 +1,34 @@
 #ifndef RIVERTREE_HPP
 #define RIVERTREE_HPP
 #include<string>
-/*
-struct Tributary{
-    std::string name;           // Name of the tributary
-    int location[2];            // Array for location, (coordinates) not sure if needed but could help to structure the tree
-    int length;                 // Length of how long tributary is, wikipedia shows this variable
 
+/*
+ SLIGHT UPDATES TO STRUCTURE:
+    Dams will go to the left of tree, tributaries to the left, will probs be ineffecient, will see if there is room
+    for optimization after doing more coding??
+
+    Nodes will either have a dam or tributary struct, if it has a dam tributary will be null, vice versa
+
+*/
+
+
+
+struct Tributary{
+    char name[50];              // Name of the tributary (saw somewhere char array is better for writing to binary file)
+    int length;                 // Length of how long tributary is, wikipedia shows this variable
+    int basinSize;              // From wiki, forget decimals, round for easier binary file
+    int averageDischarge;
 };
 struct Dam{
-    std::string name;           // name of the dam
-    int location[2];            // Location (coordinates), could help with structuring
+    char name[100];           // name of the dam  (saw somewhere char array is better for writing to binary file)
 
 };
-*/
+
 struct RiverNode{
-    std::string type;           // Correlates to type of node, either a dam or a tributary
-    std::string name;
-    int length;                 // For tributaries
     RiverNode* left;            // Left and right pointers to maintain tree structure
     RiverNode* right;           // Right pointer
-
-    //Tributary trib;             // Not sure if need both right now, but idea is that can have 2 different types of nodes
-    //Dam dam;                    // Dam ^
+    Dam* dam;                   // Dam pointer, 
+    Tributary* trib;            // Tributary pointer, river nodes will only contain one, oher will be nullptr
 
     RiverNode();  
     RiverNode(std::string name);               // Constructors and destructors for handling creating a node: How do we handle to types of nodes
