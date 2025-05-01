@@ -1,21 +1,44 @@
 #include "RiverTree.hpp"
 #include <iostream>
 
+
 // Default constructor, normally should never be used
 Dam::Dam(){
-    name;
+    //char name[100];
+    std::string nameOfDam = "";
+    std::cout << "What is the name of the dam?" << std::endl;
+    std::getline(std::cin, nameOfDam);
+    for(int i = 0; i < 99; ++i){
+        if(i < nameOfDam.size()){
+            name[i] = nameOfDam.at(i);
+        }else {
+            name[i] = '\0';
+        }
+    }
 }
+/*
 Dam::Dam(char name[]){
     for(int i = 0; i < 99; ++i){
         this->name[i] = name[i];     // need to make sure name is filled with null after meaningful character
     }
-}
+}*/
 Tributary::Tributary(){
+    std::string nameOfTrib = "";
+    std::cout << "What is the name of the dam?" << std::endl;
+    std::getline(std::cin, nameOfTrib);
+    for(int i = 0; i < 99; ++i){
+        if(i < nameOfTrib.size()){
+            name[i] = nameOfTrib.at(i);
+        }else {
+            name[i] = '\0';
+        }
+    }
     name;
     length = 0;
     basinSize = 0;
     averageDischarge = 0;
 }
+/*
 Tributary::Tributary(char name[100], int length, int basinSize, int averageDischarge){
     for(int i = 0; i < 100; ++i){
         this->name[i] = name[i];    // need to make sure name is filled with null after meaningful character
@@ -24,6 +47,7 @@ Tributary::Tributary(char name[100], int length, int basinSize, int averageDisch
     this->basinSize = basinSize;
     this->averageDischarge = averageDischarge;
 }
+*/
 RiverNode::RiverNode(){
     this->dam = new Dam();
     this->trib = new Tributary();
@@ -47,5 +71,35 @@ RiverNode::RiverNode(int type){
         RiverNode();
     }
     
+}
+void RiverTree::add_dam(){
+    add_dam(root);
+}
+void RiverTree::add_dam(RiverNode* node){
+    if(node == nullptr){
+        RiverNode* new_dam = new RiverNode(2);
+        node = new_dam;
+        return;
+    }else{
+        // Traverse further left, (Dams)
+        add_dam(node->left);
+    }
+    return;
+}
+void RiverTree::add_tributary(){
+    RiverNode* new_trib = new RiverNode(1);
+    add_tributary(new_trib);
+}
+void RiverTree::add_tributary(RiverNode* node){
+    if(node == nullptr){
+        RiverNode* new_trib = new RiverNode(1);
+        node = new_trib;
+        return;
+    }else{
+        // Traverse further right for tributarys
+        add_tributary(node->right);
+    }
+    
+    return;
 }
 

@@ -18,10 +18,15 @@ struct Tributary{
     int length;                 // Length of how long tributary is, wikipedia shows this variable
     int basinSize;              // From wiki, forget decimals, round for easier binary file
     int averageDischarge;
+
+    Tributary();
+    Tributary(char name[], int length, int basinSize, int averageDischarge);
 };
 struct Dam{
     char name[100];           // name of the dam  (saw somewhere char array is better for writing to binary file)
 
+    Dam();
+    Dam(char name[]);
 };
 
 struct RiverNode{
@@ -31,8 +36,7 @@ struct RiverNode{
     Tributary* trib;            // Tributary pointer, river nodes will only contain one, oher will be nullptr
 
     RiverNode();  
-    RiverNode(std::string name);               // Constructors and destructors for handling creating a node: How do we handle to types of nodes
-    RiverNode(std::string name, int length);
+    RiverNode(int type);               // Constructors and destructors for handling creating a node: How do we handle to types of nodes
 
     ~RiverNode();                            // No need for destructor? Nothing is deleted from river
 
@@ -40,7 +44,7 @@ struct RiverNode{
 class RiverTree{
     private:
         RiverNode* root;        // Root will represent the mouth of the columbia river
-        void add_dam(std::string name, int location[2]);        // helper functions?...
+        void add_dam(char name[100]);        // helper functions?...
         void add_dam(RiverNode* node);
         void add_tributary(std::string name, int location[2]);
         void add_tributary(RiverNode* node);
