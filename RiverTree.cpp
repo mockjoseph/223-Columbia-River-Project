@@ -16,12 +16,17 @@ Dam::Dam(){
         }
     }
 }
-/*
-Dam::Dam(char name[]){
+
+Dam::Dam(std::string name){
     for(int i = 0; i < 99; ++i){
-        this->name[i] = name[i];     // need to make sure name is filled with null after meaningful character
+        if(i < name.size()){
+            this->name[i] = name.at(i);
+        }else{
+            this->name[i] = '\0';
+        }
+        
     }
-}*/
+}
 Tributary::Tributary(){
     std::string nameOfTrib = "";
     std::string trash;
@@ -44,16 +49,20 @@ Tributary::Tributary(){
     std::cin >> averageDischarge;
     
 }
-/*
-Tributary::Tributary(char name[100], int length, int basinSize, int averageDischarge){
-    for(int i = 0; i < 100; ++i){
-        this->name[i] = name[i];    // need to make sure name is filled with null after meaningful character
+
+Tributary::Tributary(std::string name, int length, int basinSize, int averageDischarge){
+    for(int i = 0; i < 99; ++i){
+        if(i < name.size()){
+            this->name[i] = name.at(i);
+        }else{
+            this->name[i] = '\0';
+        }
     }
     this->length = length;
     this->basinSize = basinSize;
     this->averageDischarge = averageDischarge;
 }
-*/
+
 RiverNode::RiverNode(){
     this->dam = nullptr;
     this->trib = nullptr;
@@ -144,7 +153,7 @@ RiverNode* RiverTree::add_dam(RiverNode* node){
     }else if(node->left != nullptr){
         add_dam(node->left);
     }
-    //return;
+    return nullptr;
 }
 void RiverTree::add_tributary(){
     add_tributary(root);
@@ -159,7 +168,7 @@ RiverNode* RiverTree::add_tributary(RiverNode* node){
     }else if(node->left != nullptr){
         add_tributary(node->left);
     }
-    
+    return nullptr;
 }
 
 // Function that I think could help with binary file:
@@ -178,3 +187,53 @@ void RiverTree::add(int val){
 
 
 
+
+RiverNode* RiverTree::add_dam(RiverNode* node, Dam* dam){
+    if(node->left == nullptr && node->right == nullptr){
+        RiverNode* new_trib = new RiverNode();
+        new_trib->dam = dam;
+        node->right = new_trib;
+        return new_trib;
+    }else if(node->right != nullptr){
+        add_dam(node->right, dam);
+    }else if(node->left != nullptr){
+        add_dam(node->left, dam);
+    }
+    return nullptr;
+}
+RiverNode* RiverTree::add_tributary(RiverNode* node, Tributary* trib){
+    if(node->left == nullptr && node->right == nullptr){
+        RiverNode* new_trib = new RiverNode();
+        new_trib->trib = trib;
+        node->left = new_trib;
+        return new_trib;
+    }else if(node->right != nullptr){
+        add_tributary(node->right, trib);
+    }else if(node->left != nullptr){
+        add_tributary(node->left, trib);
+    }
+    return nullptr;
+}
+void RiverTree::add_trib(Tributary* trib){
+    RiverNode* new_node;
+    new_node = add_tributary(root, trib);
+    // New node ptr in binary file should contain all info of the node
+}
+void RiverTree::add_dam(Dam* dam){
+    RiverNode* new_node;
+    new_node = add_dam(root, dam);
+    // New node ptr in binary file should contain all info of the node
+}
+
+void RiverTree::traverse(){
+    traverse(root);
+}
+void RiverTree::traverse(RiverNode* node){
+    if(node == nullptr){
+        return;
+    }else if(node->left != nullptr){
+        traverse(node->left);
+    }else if(node->right != nullptr){
+        traverse(node->right);
+    }
+}

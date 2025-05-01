@@ -2,12 +2,22 @@
 
 int main(){
     RiverTree tree;
-    tree.add_dam();
-    //tree.print_dams();
-    tree.add(1);
-    tree.add(0);
-    tree.add(1);
+    Tributary* cowlitz = new Tributary("name", 169, 6698, 287);
+    Tributary* lewis = new Tributary("Lewis", 153, 2709, 173);
+    Tributary* willamette = new Tributary("Willamette", 301, 28949, 1099);
+    Tributary* sandy = new Tributary("Sandy", 92, 1316, 65);
+    Dam* bonneville = new Dam("Bonneville Dam");
+
+    
+
+    tree.add_trib(cowlitz);
+    tree.add_trib(lewis);
+    tree.add_trib(willamette);
+    tree.add_trib(sandy);
+    tree.add_dam(bonneville);
+    
+    
     tree.print_tribs();
-    tree.print_dams();
+    
     return 0;
 }

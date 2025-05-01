@@ -20,13 +20,13 @@ struct Tributary{
     int averageDischarge;
 
     Tributary();
-    Tributary(char name[], int length, int basinSize, int averageDischarge);
+    Tributary(std::string name, int length, int basinSize, int averageDischarge);
 };
 struct Dam{
     char name[100];           // name of the dam  (saw somewhere char array is better for writing to binary file)
 
     Dam();
-    Dam(char name[]);
+    Dam(std::string name);
 };
 
 struct RiverNode{
@@ -52,6 +52,9 @@ class RiverTree{
         RiverNode* add_tributary(RiverNode* new_trib);
         void print_tribs(RiverNode* node);
         void print_dams(RiverNode* node);
+        void traverse(RiverNode* node);
+        RiverNode* add_tributary(RiverNode* node, Tributary* trib);
+        RiverNode* add_dam(RiverNode* node, Dam* dam);
     public:
         RiverTree();
         RiverTree(int val);
@@ -64,6 +67,12 @@ class RiverTree{
         void print_dam(RiverNode* node);
         void print_dams();
         void add(int val);
+        void traverse();
+        
+
+        void add_dam(Dam* dam);
+        void add_trib(Tributary* trib);
+
         
 
 
