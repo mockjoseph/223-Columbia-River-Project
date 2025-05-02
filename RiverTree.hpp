@@ -19,14 +19,15 @@ struct Tributary{
     int basinSize;              // From wiki, forget decimals, round for easier binary file
     int averageDischarge;
 
-    Tributary();
-    Tributary(std::string name, int length, int basinSize, int averageDischarge);
+
+    Tributary();    // Default constructor (asks for what the data is)
+    Tributary(std::string name, int length, int basinSize, int averageDischarge); // Paramaterized contructor for inputting data
 };
 struct Dam{
     std::string name;           // name of the dam  (saw somewhere char array is better for writing to binary file)
 
-    Dam();
-    Dam(std::string name);
+    Dam();  // Default, asks for input
+    Dam(std::string name);      // Paramaterized, manually input
 };
 
 struct RiverNode{
@@ -35,7 +36,7 @@ struct RiverNode{
     Dam* dam;                   // Dam pointer, 
     Tributary* trib;            // Tributary pointer, river nodes will only contain one, oher will be nullptr
     
-    char name[14] = {'C', 'o', 'l', 'u', 'm', 'b', 'i', 'a', ' ', 'R', 'i', 'v', 'e', 'r'};
+    std::string name = "Columbia River";    // Name only used for the root, had no other ideas on how to handle this
 
     RiverNode();  
     RiverNode(int type);               // Constructors and destructors for handling creating a node: How do we handle to types of nodes
@@ -46,9 +47,9 @@ struct RiverNode{
 class RiverTree{
     private:
         RiverNode* root;        // Root will represent the mouth of the columbia river
-        void add_dam(char name[100]);        // helper functions?...
+        //void add_dam(char name[100]);        // helper functions?...
         RiverNode* add_dam(RiverNode* node);
-        void add_tributary(std::string name, int location[2]);
+        //void add_tributary(std::string name, int location[2]);
         RiverNode* add_tributary(RiverNode* new_trib);
         void print_tribs(RiverNode* node);
         void print_dams(RiverNode* node);
