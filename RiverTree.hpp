@@ -14,7 +14,7 @@
 
 
 struct Tributary{
-    char name[50];              // Name of the tributary (saw somewhere char array is better for writing to binary file)
+    std::string name;              // Name of the tributary (saw somewhere char array is better for writing to binary file)
     int length;                 // Length of how long tributary is, wikipedia shows this variable
     int basinSize;              // From wiki, forget decimals, round for easier binary file
     int averageDischarge;
@@ -23,7 +23,7 @@ struct Tributary{
     Tributary(std::string name, int length, int basinSize, int averageDischarge);
 };
 struct Dam{
-    char name[100];           // name of the dam  (saw somewhere char array is better for writing to binary file)
+    std::string name;           // name of the dam  (saw somewhere char array is better for writing to binary file)
 
     Dam();
     Dam(std::string name);

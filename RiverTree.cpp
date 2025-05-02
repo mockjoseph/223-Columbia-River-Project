@@ -8,37 +8,18 @@ Dam::Dam(){
     std::string nameOfDam = "";
     std::cout << "What is the name of the dam?" << std::endl;
     std::getline(std::cin, nameOfDam);
-    for(int i = 0; i < 99; ++i){
-        if(i < nameOfDam.size()){
-            name[i] = nameOfDam.at(i);
-        }else {
-            name[i] = '\0';
-        }
-    }
+    this->name = name;
 }
 
 Dam::Dam(std::string name){
-    for(int i = 0; i < 99; ++i){
-        if(i < name.size()){
-            this->name[i] = name.at(i);
-        }else{
-            this->name[i] = '\0';
-        }
-        
-    }
+    this->name = name;
 }
 Tributary::Tributary(){
     std::string nameOfTrib = "";
     std::string trash;
     std::cout << "What is the name of the tributary?" << std::endl;
     std::getline(std::cin, nameOfTrib);
-    for(int i = 0; i < 99; ++i){
-        if(i < nameOfTrib.size()){
-            name[i] = nameOfTrib.at(i);
-        }else {
-            name[i] = '\0';
-        }
-    }
+    this->name = nameOfTrib;
     std::cout << "Length?" << std::endl;
     std::cin >> length;
     std::getline(std::cin, trash);
@@ -51,13 +32,7 @@ Tributary::Tributary(){
 }
 
 Tributary::Tributary(std::string name, int length, int basinSize, int averageDischarge){
-    for(int i = 0; i < 99; ++i){
-        if(i < name.size()){
-            this->name[i] = name.at(i);
-        }else{
-            this->name[i] = '\0';
-        }
-    }
+    this->name = name;
     this->length = length;
     this->basinSize = basinSize;
     this->averageDischarge = averageDischarge;
