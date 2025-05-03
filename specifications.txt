@@ -1,0 +1,203 @@
+Feature: `Dam::Dam()`
+Purpose: Constructs a dam object by prompting user input for name and parent tributary.
+- Assumptions: Standard input will provide valid strings.
+- Inputs: None explicitly; relies on `std::cin`.
+- Outputs: None directly.
+- State Changes: Initializes dam name and parent_name from user input.
+- Expected Behavior: Dam object is constructed with user-supplied data.
+
+Feature: `Dam::Dam(std::string name, std::string parent_name)`
+Purpose: Constructs a dam object with given name and parent tributary name.
+- Assumptions: Inputs are valid strings.
+- Inputs: `std::string name`, `std::string parent_name`
+- Outputs: None.
+- State Changes: Sets dam’s name and parent_name fields.
+- Expected Behavior: Dam object stores the given name and parent name.
+
+Feature: `Tributary::Tributary()`
+Purpose: Constructs a tributary object using user input.
+- Assumptions: Input data from `std::cin` is valid.
+- Inputs: None explicitly; uses `std::cin` for all attributes.
+- Outputs: None directly.
+- State Changes: Initializes all tributary attributes based on user input.
+- Expected Behavior: Tributary object is created with populated fields.
+
+Feature: `Tributary::Tributary(...)`
+Purpose: Constructs a tributary object using provided values.
+- Assumptions: All inputs are valid.
+- Inputs: `std::string name`, `int length`, `int basinSize`, `int averageDischarge`, `std::string parent_name`
+- Outputs: None.
+- State Changes: Sets all member attributes of the tributary.
+- Expected Behavior: Tributary object contains all assigned input values.
+
+Feature: `RiverNode::RiverNode()`
+Purpose: Constructs an empty river node with no dam or tributary.
+- Assumptions: None.
+- Inputs: None.
+- Outputs: None.
+- State Changes: Initializes `dam`, `trib`, `left`, and `right` pointers to `nullptr`.
+- Expected Behavior: Node created with no data and null pointers.
+
+Feature: `RiverNode::RiverNode(...)` (Tributary version)
+Purpose: Constructs a river node with a tributary.
+- Assumptions: Input values are valid.
+- Inputs: `std::string name`, `int length`, `int basinSize`, `int averageDischarge`, `std::string parent_name`
+- Outputs: None.
+- State Changes: Allocates a `Tributary` object; sets name and children pointers.
+- Expected Behavior: Node represents a tributary in the river tree.
+
+Feature: `RiverNode::RiverNode(...)` (Dam version)
+Purpose: Constructs a river node with a dam.
+- Assumptions: Input strings are valid.
+- Inputs: `std::string name`, `std::string parent_name`
+- Outputs: None.
+- State Changes: Allocates a `Dam` object; sets name and children pointers.
+- Expected Behavior: Node represents a dam in the river tree.
+
+Feature: `RiverNode::RiverNode(int type)`
+Purpose: Constructs a node based on type: 1 = tributary, 2 = dam.
+- Assumptions: `type` is an integer from {0, 1, 2}.
+- Inputs: `int type`
+- Outputs: None.
+- State Changes: Allocates appropriate object based on type.
+- Expected Behavior: Node is initialized with either dam, tributary, or empty (type 0).
+
+Feature: `RiverNode::RiverNode(const RiverNode& other)`
+Purpose: Copy constructor to deep-copy dam and tributary data.
+- Assumptions: `other` is a valid `RiverNode` instance.
+- Inputs: `const RiverNode& other`
+- Outputs: None.
+- State Changes: Allocates deep copies of dam and tributary if they exist.
+- Expected Behavior: New node shares same data but not children pointers.
+
+Feature: `RiverTree::RiverTree()`
+Purpose: Constructs a river tree with an empty root node.
+- Assumptions: None.
+- Inputs: None.
+- Outputs: None.
+- State Changes: Allocates a new empty `RiverNode` as root.
+- Expected Behavior: RiverTree object initialized and ready to accept nodes.
+
+Feature: `RiverTree::print_dam(RiverNode* node)`
+Purpose: Prints the name of a dam in a formatted layout.
+- Assumptions: `node` is not null and has a valid `dam`.
+- Inputs: `RiverNode* node`
+- Outputs: Console output.
+- State Changes: None.
+- Expected Behavior: Dam name printed with decoration.
+
+Feature: `RiverTree::print_dams(RiverNode* node)`
+Purpose: Recursively prints all dam nodes in the tree.
+- Assumptions: `node` may be null; handles traversal internally.
+- Inputs: `RiverNode* node`
+- Outputs: Console output for each dam.
+- State Changes: None.
+- Expected Behavior: In-order traversal printing all dam nodes.
+
+Feature: `RiverTree::print_dams()`
+Purpose: Public wrapper for printing all dam nodes from root.
+- Assumptions: Tree has been initialized.
+- Inputs: None.
+- Outputs: Console output for each dam.
+- State Changes: None.
+- Expected Behavior: All dam nodes are printed starting from root.
+
+Feature: `RiverTree::print_node(RiverNode* node)`
+Purpose: Prints node details based on whether it is a dam or tributary.
+- Assumptions: `node` is not null.
+- Inputs: `RiverNode* node`
+- Outputs: Console output.
+- State Changes: None.
+- Expected Behavior: Prints details depending on node content.
+
+Feature: `RiverTree::print_trib(RiverNode* node)`
+Purpose: Prints detailed information about a tributary node.
+- Assumptions: `node` has valid `trib`.
+- Inputs: `RiverNode* node`
+- Outputs: Console output.
+- State Changes: None.
+- Expected Behavior: Prints tributary details in a formatted way.
+
+Feature: `RiverTree::print_tribs()`
+Purpose: Public function to print all tributaries in the tree.
+- Assumptions: Tree is initialized.
+- Inputs: None.
+- Outputs: Console output.
+- State Changes: None.
+- Expected Behavior: All tributary nodes are printed in in-order traversal.
+
+Feature: `RiverTree::print_tribs(RiverNode* node)`
+Purpose: Recursively prints all tributaries starting from a node.
+- Assumptions: `node` may be null.
+- Inputs: `RiverNode* node`
+- Outputs: Console output.
+- State Changes: None.
+- Expected Behavior: Tributary nodes are printed in in-order traversal.
+
+Feature: add_node()
+Purpose: Adds a new river node to the tree based on parent-child relationships.
+- Assumptions: The node being added has a valid parent name in either its trib or dam pointer.
+- Inputs: RiverNode* root, RiverNode* node
+- Outputs: bool indicating success (true) or failure (false).
+- State Changes: Tree modified to include the new node.
+- Expected Behavior: Traverses tree to find the correct parent node. If found, inserts a copy of the parent to the left and adds the new node as a right child.
+
+Feature: find_node()
+Purpose: Finds a node in the tree based on the name of its trib or dam.
+- Assumptions: All node names are unique within the tree.
+- Inputs: RiverNode* root, std::string name
+- Outputs: Pointer to the matching RiverNode, or nullptr if not found.
+- State Changes: None.
+- Expected Behavior: Searches right subtree first, then left. Returns first matching node with matching trib or dam name.
+
+Feature: print_tree()
+Purpose: Pretty-prints the river tree structure with indentation representing depth.
+- Assumptions: Tree may be unbalanced; all names fit within default spacing.
+- Inputs: RiverNode* root, int depth
+- Outputs: None (prints to std::cout).
+- State Changes: None.
+- Expected Behavior: Calculates tree height and delegates to overloaded print_tree() to format and print nodes hierarchically.
+
+Feature: print_tree() (overloaded)
+Purpose: Helper function to print the tree with given depth and height.
+- Assumptions: Valid height is passed in from the public-facing print_tree().
+- Inputs: RiverNode* root, int depth, int tree_height
+- Outputs: None (prints to std::cout).
+- State Changes: None.
+- Expected Behavior: Performs in-order traversal; indents based on current depth to visually represent tree structure.
+
+Feature: calculate_height()
+Purpose: Computes the height of the tree from a given root node.
+- Assumptions: Tree may be empty or unbalanced.
+- Inputs: RiverNode* root
+- Outputs: int height
+- State Changes: None.
+- Expected Behavior: Recursively finds the max height of left and right subtrees, then adds 1 for current node.
+
+Feature: main()
+Purpose: Entry point for the Columbia River System program.
+- Assumptions: Tree creation and user input are valid.
+- Inputs: None.
+- Outputs: int (exit code)
+- State Changes: Creates and modifies a RiverTree object.
+- Expected Behavior: Initializes the river system, displays a menu, and routes user input to view or explore the tree until they choose to quit.
+
+Feature: create_tree()
+Purpose: Builds the Columbia River tree with tributaries and dams.
+- Assumptions: The tree starts with a root node for the Columbia River.
+- Inputs: RiverTree& tree
+- Outputs: None
+- State Changes: Adds nodes (rivers and dams) to the tree structure.
+- Expected Behavior: Populates the river system in a structured order, including tributaries and dam nodes connected to their respective parent rivers.
+
+Feature: explore_tree()
+Purpose: Allows the user to interactively explore the river system starting from the root.
+- Assumptions: Tree is already created.
+- Inputs: RiverTree& tree
+- Outputs: None
+- State Changes: Updates the current node pointer during navigation.
+- Expected Behavior:
+  - Displays current node information.
+  - Allows navigation upstream (parent), downstream (children), or returns to the main menu.
+
+

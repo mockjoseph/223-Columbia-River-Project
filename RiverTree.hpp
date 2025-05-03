@@ -62,7 +62,6 @@ class RiverTree{
         void print_tribs(RiverNode* node);
         void print_dams(RiverNode* node);
         void traverse(RiverNode* node);
-        RiverNode* find_node(RiverNode* node, std::string name); // For traversing to a node, will return the node if found, nullptr if not found
     public:
         RiverNode* root;        // Root will represent the mouth of the columbia river
         RiverTree();
@@ -77,7 +76,7 @@ class RiverTree{
         void print_dams();
         void add(int val);
         void traverse();
-        
+        RiverNode* find_node(RiverNode* node, std::string name); // For traversing to a node, will return the node if found, nullptr if not found
         bool add_node(RiverNode* root, RiverNode* node);
         void add_dam(Dam* dam);
         void add_trib(Tributary* trib);
@@ -86,6 +85,7 @@ class RiverTree{
         void print_tree(RiverNode* root, int depth, int tree_height); // for printing the tree
         void print_node(RiverNode* node); // For printing a node, will print the tributary or dam data
         int calculate_height(RiverNode* root); // For calculating the height of the tree
+
 
 };
 
