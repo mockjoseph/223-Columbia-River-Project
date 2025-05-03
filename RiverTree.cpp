@@ -6,13 +6,19 @@
 Dam::Dam(){
     //char name[100];
     std::string nameOfDam = "";
+    std::string parent = "";
+    std::string trash;
     std::cout << "What is the name of the dam?" << std::endl;
     std::getline(std::cin, nameOfDam);
-    this->name = name;
+    this->name = nameOfDam;
+    std::cout << "What tributary is this dam on?" << std::endl;
+    std::getline(std::cin, parent);
+    parent_name = parent;
 }
 
-Dam::Dam(std::string name){
+Dam::Dam(std::string name, std::string parent_name){
     this->name = name;
+    this->parent_name = parent_name;
 }
 Tributary::Tributary(){
     std::string nameOfTrib = "";
@@ -28,14 +34,17 @@ Tributary::Tributary(){
     std::getline(std::cin, trash);
     std::cout << "Average Discharge?" << std::endl;
     std::cin >> averageDischarge;
-    
+    std::getline(std::cin, trash);
+    std::cout << "What tributary is this branching off of?" << std::endl;
+    std::cin >> parent_name;
 }
 
-Tributary::Tributary(std::string name, int length, int basinSize, int averageDischarge){
+Tributary::Tributary(std::string name, int length, int basinSize, int averageDischarge, std::string parent_name){
     this->name = name;
     this->length = length;
     this->basinSize = basinSize;
     this->averageDischarge = averageDischarge;
+    this->parent_name = parent_name;
 }
 
 RiverNode::RiverNode(){
@@ -43,7 +52,22 @@ RiverNode::RiverNode(){
     this->trib = nullptr;
     this->left = nullptr;
     this->right = nullptr;
-    
+}
+
+RiverNode::RiverNode(std::string name, int length, int basinSize, int averageDischarge, std::string parent_name){
+    this->trib = new Tributary(name, length, basinSize, averageDischarge, parent_name);
+    this->dam = nullptr;
+    this->left = nullptr;
+    this->right = nullptr;
+    this->name = trib->name; // Set the name of the node to the tributary name
+}
+
+RiverNode::RiverNode(std::string name, std::string parent_name){
+    this->dam = new Dam(name, parent_name);
+    this->trib = nullptr;
+    this->left = nullptr;
+    this->right = nullptr;
+    this->name = dam->name; // Set the name of the node to the dam name
 }
 
 
@@ -55,12 +79,13 @@ RiverNode::RiverNode(int type){
         this->dam = nullptr;
         this->left = nullptr;
         this->right = nullptr;
+        this->name = trib->name; // Set the name of the node to the tributary name
     }else if(type == 2){
         this->dam = new Dam();
         this->trib = nullptr;
         this->left = nullptr;
         this->right = nullptr;
-
+        this->name = dam->name; // Set the name of the node to the dam name
     }else if (type == 0){
         // Root / mouth
 
@@ -69,6 +94,31 @@ RiverNode::RiverNode(int type){
     }
     
 }
+
+//copy constructor
+RiverNode::RiverNode(const RiverNode& other) {
+    name = other.name;
+
+    // Deep copy Dam
+    if (other.dam != nullptr) {
+        dam = new Dam(*other.dam);
+    } else {
+        dam = nullptr;
+    }
+
+    // Deep copy Tributary
+    if (other.trib != nullptr) {
+        trib = new Tributary(*other.trib);
+    } else {
+        trib = nullptr;
+    }
+
+    // We will not copy children, because this would be bad for copying in our intended tree structure
+    left = nullptr;
+    right = nullptr;
+}
+
+
 RiverTree::RiverTree(){
     root = new RiverNode();
 }
@@ -92,13 +142,34 @@ void RiverTree::print_dams(RiverNode* node){
 void RiverTree::print_dams(){
     print_dams(root);
 }
+void RiverTree::print_node(RiverNode* node){
+    if (node->name == "Columbia") {
+        std::cout << "_________________________" << std::endl;
+        std::cout << node->name << std::endl;
+        std::cout << std::endl;
+        std::string child_name = node->right ? node->right->name : "None";
+        std::cout << "Child?: " << child_name << std::endl;
+        std::cout << "------------------------" << std::endl;
+    }
+    else if(node->trib){
+        print_trib(node);
+    }else if(node->dam){
+        print_dam(node);
+    }else{
+        std::cout << "No data" << std::endl;
+    }
+
+}
 void RiverTree::print_trib(RiverNode* node){
     std::cout << "_________________________" << std::endl;
-    std::cout << node->trib->name << std::endl;
+    std::cout << node->name << std::endl;
     std::cout << std::endl;
     std::cout << "Length: " << node->trib->length << std::endl;
     std::cout << "Basin Size: " << node->trib->basinSize << std::endl;
     std::cout << "Average Discharge: " << node->trib->averageDischarge << std::endl;
+    std::cout << "Parent: " << node->trib->parent_name << std::endl;
+    std::string child_name = node->right ? node->right->name : "None";
+    std::cout << "Child?: " << child_name << std::endl;
     std::cout << "------------------------" << std::endl;
 }
 void RiverTree::print_tribs(){
@@ -115,100 +186,70 @@ void RiverTree::print_tribs(RiverNode* node){
     print_tribs(node->right);
 }
 
-void RiverTree::add_dam(){
-    add_dam(root);
-}   
-RiverNode* RiverTree::add_dam(RiverNode* node){
-    if(node->left == nullptr && node->right == nullptr){
-        RiverNode* new_dam = new RiverNode(2);
-        node->right = new_dam;
-        return new_dam;
-    }else if(node->right != nullptr){
-        add_dam(node->right);
-    }else if(node->left != nullptr){
-        add_dam(node->left);
+bool RiverTree::add_node(RiverNode* root, RiverNode* node){
+    std::string parent_name = node->trib ? node->trib->parent_name : node->dam->parent_name; // Get the parent name from the tributary or dam
+    if (root == nullptr) {
+        return false;
     }
-    return nullptr;
-}
-void RiverTree::add_tributary(){
-    add_tributary(root);
-}
-RiverNode* RiverTree::add_tributary(RiverNode* node){
-    if(node->left == nullptr && node->right == nullptr){
-        RiverNode* new_trib = new RiverNode(1);
-        node->left = new_trib;
-        return new_trib;
-    }else if(node->right != nullptr){
-        add_tributary(node->right);
-    }else if(node->left != nullptr){
-        add_tributary(node->left);
+    if (root->name == parent_name) {
+        if (root->left && (root->left->name == parent_name)) {
+            return add_node(root->left, node); // Recursively go left, because we want to add this as far down this 'river' as possible. basically this means there is already a branch in this spot and we want to go down to an open spot
+        }
+        root->right = node;
+        RiverNode* root_copy = new RiverNode(*root); // Create a copy of the root node
+        root->left = root_copy; // Set the left child to the copy of the root node
+        return true;
     }
-    return nullptr;
-}
-
-// Function that I think could help with binary file:
-void RiverTree::add(int val){
-    // 1 for dam adding, 0 tributary adding
-    RiverNode* new_node;
-    if(val == 1){
-        new_node = add_dam(root);
-    }if(val == 0){
-        new_node = add_tributary(root);
+    if (add_node(root->left, node)) {
+        return true; // Recursively search left and right children
     }
-    // Write new node to binary file, should contain all infromation based on the node that has been added
-    // Only issue is that the root will need to be written when I defined it in the tree constructior
+    return add_node(root->right, node); // Recursively search left and right children
 }
 
-
-
-
-
-RiverNode* RiverTree::add_dam(RiverNode* node, Dam* dam){
-    if(node->left == nullptr && node->right == nullptr){
-        RiverNode* new_trib = new RiverNode();
-        new_trib->dam = dam;
-        node->right = new_trib;
-        return new_trib;
-    }else if(node->right != nullptr){
-        add_dam(node->right, dam);
-    }else if(node->left != nullptr){
-        add_dam(node->left, dam);
+RiverNode* RiverTree::find_node(RiverNode* root, std::string name) {
+    if (root == nullptr) {
+        return nullptr;
     }
-    return nullptr;
-}
-RiverNode* RiverTree::add_tributary(RiverNode* node, Tributary* trib){
-    if(node->left == nullptr && node->right == nullptr){
-        RiverNode* new_trib = new RiverNode();
-        new_trib->trib = trib;
-        node->left = new_trib;
-        return new_trib;
-    }else if(node->right != nullptr){
-        add_tributary(node->right, trib);
-    }else if(node->left != nullptr){
-        add_tributary(node->left, trib);
+
+    if ((root->trib && root->trib->name == name) || (root->dam && root->dam->name == name)) { // confusing syntax here is just making sure these are not null
+        return root;
     }
-    return nullptr;
-}
-void RiverTree::add_trib(Tributary* trib){
-    RiverNode* new_node;
-    new_node = add_tributary(root, trib);
-    // New node ptr in binary file should contain all info of the node
-}
-void RiverTree::add_dam(Dam* dam){
-    RiverNode* new_node;
-    new_node = add_dam(root, dam);
-    // New node ptr in binary file should contain all info of the node
+
+    RiverNode* right_result = find_node(root->right, name);
+    if (right_result != nullptr) {
+        return right_result;
+    }
+
+    return find_node(root->left, name);
 }
 
-void RiverTree::traverse(){
-    traverse(root);
+void RiverTree::print_tree(RiverNode* root, int depth) {
+    int tree_height = calculate_height(root); // Calculate the height of the tree
+    // std::cout << "Tree Height: " << tree_height << std::endl; // Print the height of the tree
+    print_tree(root, depth, tree_height); // Call the overloaded function with the calculated height
 }
-void RiverTree::traverse(RiverNode* node){
-    if(node == nullptr){
+
+
+void RiverTree::print_tree(RiverNode* root, int depth, int tree_height) {
+    if (root == nullptr) {
         return;
-    }else if(node->left != nullptr){
-        traverse(node->left);
-    }else if(node->right != nullptr){
-        traverse(node->right);
     }
+    print_tree(root->left, depth + 1, tree_height); // Print left subtree first
+    for (int i = depth + 1; i < tree_height; i++) {
+        std::cout << "               "; // Indent for depth
+    }
+    std::cout << root->name << std::endl; // Print the current node name
+    print_tree(root->right, depth + 1, tree_height); // Print right subtree
 }
+
+
+int RiverTree::calculate_height(RiverNode* root) {
+    if (root == nullptr) {
+        return 0;
+    }
+    int left_height = calculate_height(root->left);
+    int right_height = calculate_height(root->right);
+    return std::max(left_height, right_height) + 1; // Height of the tree is max of left and right subtree heights + 1 for the current node
+}
+
+

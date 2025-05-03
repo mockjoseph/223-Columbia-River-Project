@@ -1,49 +1,143 @@
 #include"RiverTree.hpp"
+#include <iostream>
+
+//function prototypes
+void create_tree(RiverTree & tree);
+void explore_tree(RiverTree & tree);
 
 int main(){
     RiverTree tree;
     
-    Tributary* cowlitz = new Tributary("name", 169, 6698, 287);
+    create_tree(tree); // Create the tree with the Columbia River and its tributaries and dams
     
-    Tributary* lewis = new Tributary("Lewis", 153, 2709, 173);
-    Tributary* willamette = new Tributary("Willamette", 301, 28949, 1099);
-    Tributary* sandy = new Tributary("Sandy", 92, 1316, 65);
-    
-    Dam* bonneville = new Dam("Bonneville Dam");
-    
-    Tributary* klickitat = new Tributary("Klickitat", 154, 3496, 45);
-    Tributary* deschutes = new Tributary("Deschutes", 406, 27550, 216);
-    Tributary* johnday = new Tributary("John Day", 457, 20521, 80);
-    Tributary* willowCreek = new Tributary("Willow Creek", 127, 2300, 1);
-    Tributary* umatilla = new Tributary("Umatilla", 143, 6345, 14);
-    Dam* mcnary = new Dam("McNary Dam");
-    
-    Tributary* snake = new Tributary("Snake", 1735, 260938, 1756);
-    Tributary* Yakima = new Tributary("Yakima", 344, 15930, 100);
-    Tributary* crabCreek = new Tributary("Crab Creek", 262, 13200, 40);
-    Tributary* okanogan = new Tributary("Okanogan", 185, 21386, 99);
-    Tributary* spokane = new Tributary("Spokane", 179, 17353, 229);
 
-    
-    tree.add_trib(cowlitz);
-    tree.add_trib(lewis);
-    tree.add_trib(willamette);
-    tree.add_trib(sandy);
-    tree.add_dam(bonneville);
-    
-    tree.add_trib(klickitat);
-    tree.add_trib(deschutes);
-    tree.add_trib(johnday);
-    tree.add_trib(willowCreek);
-    tree.add_trib(umatilla);
-    tree.add_dam(mcnary);
-    tree.add_trib(snake);
-    tree.add_trib(Yakima);
-    tree.add_trib(crabCreek);
-    tree.add_trib(okanogan);
-    tree.add_trib(spokane);
-    
-    tree.print_tribs();
+    int choice = 0;
+    while (choice != 3) {
+        std::cout << "\n=== COLUMBIA RIVER SYSTEM MENU ===" << std::endl;
+        std::cout << "(1) View Full Tree" << std::endl;
+        std::cout << "(2) Explore Tree" << std::endl;
+        std::cout << "(3) Quit" << std::endl;
+        std::cout << "Enter your choice (1-3): ";
+        std::cin >> choice;
+        
+        switch (choice) {
+            case 1:
+                std::cout << "\n=== FULL RIVER TREE ===" << std::endl;
+                tree.print_tree(tree.root, 0);
+                break;
+                
+            case 2:
+                // Placeholder for Explore Tree functionality
+                explore_tree(tree);
+                break;
+                
+            case 3:
+                break;
+                
+            default:
+                std::cout << "Invalid choice. Please enter 1, 2, or 3." << std::endl;
+                break;
+        }
+    }
     
     return 0;
+}
+
+
+void create_tree(RiverTree & tree) {
+    // Main Columbia River (ordered west to east)
+    tree.add_node(tree.root, new RiverNode("Willamette", 301, 28949, 1099, "Columbia"));
+    tree.add_node(tree.root, new RiverNode("Bonneville Dam", "Columbia River"));
+    tree.add_node(tree.root, new RiverNode("The Dalles Dam", "Columbia River"));
+    tree.add_node(tree.root, new RiverNode("Deschutes", 252, 12700, 180, "Columbia"));
+    tree.add_node(tree.root, new RiverNode("John Day", 284, 8100, 55, "Columbia"));
+    tree.add_node(tree.root, new RiverNode("McNary Dam", "Columbia River"));
+    tree.add_node(tree.root, new RiverNode("Yakima", 344, 15930, 100, "Columbia"));
+    tree.add_node(tree.root, new RiverNode("Snake", 1075, 108000, 1610, "Columbia"));
+    tree.add_node(tree.root, new RiverNode("Priest Rapids Dam", "Columbia River"));
+    tree.add_node(tree.root, new RiverNode("Spokane", 111, 6160, 60, "Columbia"));
+    tree.add_node(tree.root, new RiverNode("Grand Coulee Dam", "Columbia River")); 
+    tree.add_node(tree.root, new RiverNode("Kootenay", 485, 42386, 299, "Columbia")); 
+
+    // Willamette River tributaries & dams (west to east)
+    tree.add_node(tree.root, new RiverNode("Clackamas", 83, 940, 65, "Willamette"));
+    tree.add_node(tree.root, new RiverNode("Santiam", 92, 1840, 75, "Willamette"));
+    tree.add_node(tree.root, new RiverNode("McKenzie", 90, 1250, 85, "Willamette"));
+    tree.add_node(tree.root, new RiverNode("Cougar Dam", "Willamette"));
+    tree.add_node(tree.root, new RiverNode("Detroit Dam", "Willamette"));
+
+    // Snake River tributaries & dams (west to east)
+    tree.add_node(tree.root, new RiverNode("Boise", 121, 11000, 100, "Snake"));
+    tree.add_node(tree.root, new RiverNode("Palouse", 167, 3300, 15, "Snake"));
+    tree.add_node(tree.root, new RiverNode("Clearwater", 120, 9500, 120, "Snake"));
+    tree.add_node(tree.root, new RiverNode("Salmon", 425, 36000, 310, "Snake"));
+    tree.add_node(tree.root, new RiverNode("Ice Harbor Dam", "Snake"));
+    tree.add_node(tree.root, new RiverNode("Hells Canyon Dam", "Snake"));
+
+    // Kootenay River tributaries & dams
+    tree.add_node(tree.root, new RiverNode("Libby Dam", "Kootenay"));
+    tree.add_node(tree.root, new RiverNode("Pend Oreille River", 179, 17353, 229, "Kootenay"));
+    tree.add_node(tree.root, new RiverNode("Elk River", 117, 4500, 60, "Kootenay"));
+    tree.add_node(tree.root, new RiverNode("Lower Bonnington Dam", "Kootenay"));
+    tree.add_node(tree.root, new RiverNode("Upper Bonnington Dam", "Kootenay"));
+    tree.add_node(tree.root, new RiverNode("Corra Linn Dam", "Kootenay"));
+
+    tree.add_node(tree.root, new RiverNode("Monroe Street Dam", "Spokane"));
+}
+
+
+void explore_tree(RiverTree & tree) {
+    RiverNode* current = tree.root;
+    current->parent = nullptr; // Initialize root's parent as nullptr
+    
+    while (true) {
+        tree.print_node(current);
+        
+        std::cout << "\n=== NAVIGATION OPTIONS ===" << std::endl;
+        std::cout << "(1) Move upstream (left child)" << std::endl;
+        std::cout << "(2) Move to tributary (right child)" << std::endl;
+        if (current->parent != nullptr) {
+            std::cout << "(3) Move downstream (to parent)" << std::endl;
+        }
+        std::cout << "(4) Return to main menu" << std::endl;
+        
+        int choice;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+        
+        switch (choice) {
+            case 1: // Move upstream (left)
+                if (current->left != nullptr) {
+                    current->left->parent = current; // Set parent before moving
+                    current = current->left;
+                } else {
+                    std::cout << "No upstream path available!\n";
+                }
+                break;
+                
+            case 2: // Move to tributary (right)
+                if (current->right != nullptr) {
+                    current->right->parent = current; // Set parent before moving
+                    current = current->right;
+                } else {
+                    std::cout << "No tributaries available!\n";
+                }
+                break;
+                
+            case 3: // Move downstream (parent)
+                if (current->parent != nullptr) {
+                    current = current->parent;
+                } else {
+                    std::cout << "Already at the top of the river system!\n";
+                }
+                break;
+                
+            case 4: // Return to main menu
+                return;
+                
+            default:
+                std::cout << "Invalid choice. Please try again.\n";
+                break;
+        }
+    }
 }

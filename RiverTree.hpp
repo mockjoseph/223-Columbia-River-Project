@@ -19,15 +19,19 @@ struct Tributary{
     int basinSize;              // From wiki, forget decimals, round for easier binary file
     int averageDischarge;
 
+    std::string parent_name;
+
 
     Tributary();    // Default constructor (asks for what the data is)
-    Tributary(std::string name, int length, int basinSize, int averageDischarge); // Paramaterized contructor for inputting data
+    Tributary(std::string name, int length, int basinSize, int averageDischarge, std::string parent_name); // Paramaterized contructor for inputting data
 };
 struct Dam{
     std::string name;           // name of the dam  (saw somewhere char array is better for writing to binary file)
 
+    std::string parent_name;
+
     Dam();  // Default, asks for input
-    Dam(std::string name);      // Paramaterized, manually input
+    Dam(std::string name, std::string parent_name);      // Paramaterized, manually input
 };
 
 struct RiverNode{
@@ -35,18 +39,22 @@ struct RiverNode{
     RiverNode* right;           // Right pointer
     Dam* dam;                   // Dam pointer, 
     Tributary* trib;            // Tributary pointer, river nodes will only contain one, oher will be nullptr
+
+    RiverNode* parent = nullptr;         // Parent pointer for traversing back up the tree NOTE: this is only used in explore tree, so it is only populated there, for now
     
-    std::string name = "Columbia River";    // Name only used for the root, had no other ideas on how to handle this
+    std::string name = "Columbia";    // A little wonky rn, but this will be updated to the name of the tributary or dam in the contructor now
 
     RiverNode();  
-    RiverNode(int type);               // Constructors and destructors for handling creating a node: How do we handle to types of nodes
+    RiverNode(int type);               // Constructors and destructors for handling creating a node: How do we handle two types of nodes
     RiverNode(Dam* dam, Tributary* trib);
+    RiverNode(std::string name, int length, int basinSize, int averageDischarge, std::string parent_name);
+    RiverNode(std::string name, std::string parent_name);
+    RiverNode(const RiverNode& other);
    // ~RiverNode();                            // No need for destructor? Nothing is deleted from river
     
 };
 class RiverTree{
     private:
-        RiverNode* root;        // Root will represent the mouth of the columbia river
         //void add_dam(char name[100]);        // helper functions?...
         RiverNode* add_dam(RiverNode* node);
         //void add_tributary(std::string name, int location[2]);
@@ -54,9 +62,9 @@ class RiverTree{
         void print_tribs(RiverNode* node);
         void print_dams(RiverNode* node);
         void traverse(RiverNode* node);
-        RiverNode* add_tributary(RiverNode* node, Tributary* trib);
-        RiverNode* add_dam(RiverNode* node, Dam* dam);
+        RiverNode* find_node(RiverNode* node, std::string name); // For traversing to a node, will return the node if found, nullptr if not found
     public:
+        RiverNode* root;        // Root will represent the mouth of the columbia river
         RiverTree();
         RiverTree(int val);
         void traverse_to(std::string name);     // For traversing, name can represent either a dam or a tributary
@@ -70,13 +78,14 @@ class RiverTree{
         void add(int val);
         void traverse();
         
-
+        bool add_node(RiverNode* root, RiverNode* node);
         void add_dam(Dam* dam);
         void add_trib(Tributary* trib);
 
-        
-
-
+        void print_tree(RiverNode* root, int depth); // helper function for printing the tree
+        void print_tree(RiverNode* root, int depth, int tree_height); // for printing the tree
+        void print_node(RiverNode* node); // For printing a node, will print the tributary or dam data
+        int calculate_height(RiverNode* root); // For calculating the height of the tree
 
 };
 
