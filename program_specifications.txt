@@ -1,97 +1,95 @@
-已思考若干秒
+Feature: `create_tree(RiverTree & tree)`
 
-
-Below are detailed feature specifications for the two top‑level functions in your `main.cpp`:
-
----
-
-**Feature:** `create_tree(RiverTree & tree)`
-
-* **Purpose:**
+Purpose:
   Build and populate a `RiverTree` representing the Columbia River system by inserting nodes for its main stem, tributaries, and dams in a predefined order.
 
-* **Assumptions:**
+Assumptions:
 
-  * `tree.root` is initially `nullptr`.
-  * All `new RiverNode(...)` calls succeed and produce valid pointers.
-  * The overloaded `tree.add_node(RiverNode* & parent, RiverNode* newNode)` inserts each node at the correct location (e.g. left or right) based on matching the parent name string.
+   `tree.root` is initially `nullptr`.
+   All `new RiverNode(...)` calls succeed and produce valid pointers.
+   The overloaded `tree.add_node(RiverNode* & parent, RiverNode* newNode)` inserts each node at the correct location (e.g. left or right) based on matching the parent name string.
 
-* **Inputs:**
+Inputs:
 
   * A reference to an empty or existing `RiverTree` object.
 
-* **Outputs:**
+Outputs:
 
-  * None (void).  No return value.
+  None (void).  No return value.
 
-* **State Changes:**
+State Changes:
 
-  * Allocates and links multiple `RiverNode` instances into `tree`, setting `tree.root` on the first insertion and then growing its left/right subtrees.
-  * After completion, `tree` holds the entire Columbia River system hierarchy.
+   Allocates and links multiple `RiverNode` instances into `tree`, setting `tree.root` on the first insertion and then growing its left/right subtrees.
+   After completion, `tree` holds the entire Columbia River system hierarchy.
 
-* **Cases & Expected Behavior:**
+Cases & Expected Behavior:
 
-  1. **Empty tree:**
+  1. Empty tree:
+    First call `add_node(tree.root, new RiverNode("Willamette", …, "Columbia"))` sets `tree.root` to a Columbia‑River root node if implementation treats root insertion specially.
 
-     * First call `add_node(tree.root, new RiverNode("Willamette", …, "Columbia"))` sets `tree.root` to a Columbia‑River root node if implementation treats root insertion specially.
-  2. **Inserting a tributary:**
+  2. Inserting a tributary:
+    When adding “Clackamas” with parent “Willamette,” the implementation must locate the Willamette node in the left subtree of Columbia and attach Clackamas as a child (e.g. right child if tributaries are modeled on that side).
+  
+  3. Inserting a dam:
+    For “Bonneville Dam” with parent “Columbia River,” it must find the Columbia node and attach the dam node appropriately.
+  
+  4. Final structure:
 
-     * When adding “Clackamas” with parent “Willamette,” the implementation must locate the Willamette node in the left subtree of Columbia and attach Clackamas as a child (e.g. right child if tributaries are modeled on that side).
-  3. **Inserting a dam:**
+    After all calls, traversing `tree` in preorder or in-order should list Columbia’s dams and tributaries in the order specified (Willamette group, Snake group, Kootenay group, etc.).
+  
+  5. Error handling:
 
-     * For “Bonneville Dam” with parent “Columbia River,” it must find the Columbia node and attach the dam node appropriately.
-  4. **Final structure:**
-
-     * After all calls, traversing `tree` in preorder or in-order should list Columbia’s dams and tributaries in the order specified (Willamette group, Snake group, Kootenay group, etc.).
-  5. **Error handling:**
-
-     * If any parent name isn’t found, a robust implementation might print an error or ignore that insertion; but as coded, it assumes every parent exists in turn.
+    If any parent name isn’t found, a robust implementation might print an error or ignore that insertion; but as coded, it assumes every parent exists in turn.
 
 ---
 
-**Feature:** `explore_tree(RiverTree & tree)`
+Feature: `explore_tree(RiverTree & tree)`
 
-* **Purpose:**
+Purpose:
   Provide an interactive, console‑based navigation of the already‑built `RiverTree`, allowing the user to traverse upstream (left), downstream (parent), or into tributaries (right) from any current node.
 
-* **Assumptions:**
+Assumptions:
 
-  * `tree.root` is non‑null and fully initialized.
-  * Every node’s `left` and `right` pointers correctly reference sub‑rivers or dams.
-  * The `RiverNode` struct has a public `parent` pointer that can be set on the fly.
-  * `tree.print_node(RiverNode*)` displays the current node’s details (name, length, flow, etc.).
+   `tree.root` is non‑null and fully initialized.
+    Every node’s `left` and `right` pointers correctly reference sub‑rivers or dams.
+   The `RiverNode` struct has a public `parent` pointer that can be set on the fly.
+   `tree.print_node(RiverNode*)` displays the current node’s details (name, length, flow, etc.).
 
-* **Inputs:**
+Inputs:
 
-  * A reference to a populated `RiverTree`.
+   A reference to a populated `RiverTree`.
 
-* **Outputs:**
+Outputs:
 
-  * None (void); user sees console prompts and node data.
+   None (void); user sees console prompts and node data.
 
-* **State Changes:**
+State Changes:
 
-  * Temporarily sets `current->parent` pointers as it moves, but does **not** modify the underlying tree structure permanently.
-  * Tracks a local `RiverNode* current` that moves around the tree.
+   Temporarily sets `current->parent` pointers as it moves, but does **not** modify the underlying tree structure permanently.
+   Tracks a local `RiverNode* current` that moves around the tree.
 
-* **Cases & Expected Behavior:**
+Cases & Expected Behavior:
 
-  1. **Start at root:**
+  1. Start at root:
 
-     * `current = tree.root`; calling `print_node(current)` shows Columbia River.
+    `current = tree.root`; calling `print_node(current)` shows Columbia River.
   2. **Move upstream (`choice==1`):**
 
-     * If `current->left` exists, set its `parent` to `current`, then `current = current->left`. Otherwise, print “No upstream path available!” and stay.
-  3. **Move to tributary (`choice==2`):**
+    If `current->left` exists, set its `parent` to `current`, then `current = current->left`. Otherwise, print “No upstream path available!” and stay.
 
-     * Similarly for `current->right`.
-  4. **Move downstream (`choice==3`):**
+  3. Move to tributary (`choice==2`):
 
-     * Only shown if `current != root`. Moves `current` to previously set `current->parent`.
-  5. **Return to main menu (`choice==4`):**
+    Similarly for `current->right`.
 
-     * Exit the loop and return control to `main()`.
-  6. **Invalid choice:**
+  4. Move downstream (`choice==3`):
+
+    Only shown if `current != root`. Moves `current` to previously set `current->parent`.
+
+  5. Return to main menu (`choice==4`):
+
+    Exit the loop and return control to `main()`.
+
+  6. Invalid choice:
 
     Prints an error message and re‑prompts.
 

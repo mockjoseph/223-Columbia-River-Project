@@ -1,5 +1,6 @@
 #include"RiverTree.hpp"
 #include <iostream>
+#include <limits>
 
 //function prototypes
 void create_tree(RiverTree & tree);
@@ -12,13 +13,16 @@ int main(){
     
 
     int choice = 0;
-    while (choice != 3) {
+    while (choice != 5) {
         std::cout << "\n=== COLUMBIA RIVER SYSTEM MENU ===" << std::endl;
         std::cout << "(1) View Full Tree" << std::endl;
         std::cout << "(2) Explore Tree" << std::endl;
-        std::cout << "(3) Quit" << std::endl;
-        std::cout << "Enter your choice (1-3): ";
+        std::cout << "(3) Print All Dams " << std::endl;
+        std::cout << "(4) Add Node (Interactive)\n";
+        std::cout << "(5) Quit\n";
+        std::cout << "Enter your choice (1-5): ";
         std::cin >> choice;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         
         switch (choice) {
             case 1:
@@ -32,10 +36,17 @@ int main(){
                 break;
                 
             case 3:
+                tree.print_dams();
                 break;
-                
+            case 4:
+                tree.add_node_interactive();
+                break;
+            
+            case 5:
+                std::cout<<"Bye"<<std::endl;
+                break;
             default:
-                std::cout << "Invalid choice. Please enter 1, 2, or 3." << std::endl;
+                std::cout << "Invalid choice. Please enter 1, 2, 3, 4, or 5 ." << std::endl;
                 break;
         }
     }

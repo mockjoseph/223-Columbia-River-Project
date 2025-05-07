@@ -66,6 +66,8 @@ class RiverTree{
         RiverNode* root;        // Root will represent the mouth of the columbia river
         RiverTree();
         RiverTree(int val);
+        RiverNode* getRoot() const;
+        void add_node_interactive();
         void traverse_to(std::string name);     // For traversing, name can represent either a dam or a tributary
         void traverse_to(int location[2]);      // can traverse to a location, get what is there.
         void add_tributary();                   // For adding / inserting, not sure if needed because the river is always the same

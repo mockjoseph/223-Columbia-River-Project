@@ -200,4 +200,81 @@ Purpose: Allows the user to interactively explore the river system starting from
   - Displays current node information.
   - Allows navigation upstream (parent), downstream (children), or returns to the main menu.
 
+Feature: RiverTree::add_node_interactive()
+
+Purpose:Provide an interactive, console‑based way for the user to add a new RiverNode (either a dam or a tributary) to an existing leaf node in the RiverTree.
+
+-Assumptions:
+
+The tree’s root pointer is valid (i.e. the tree has been initialized and at least contains the mouth node). All leaf nodes currently in the tree can be uniquely identified by name. Standard input (std::cin) and output (std::cout) are available and operating correctly.The user will enter sensible, case‑sensitive names and integer values when prompted.
+
+-Inputs:
+No function parameters.
+
+-Outputs:
+Prompt strings requesting user input to see if user want to get the full free, print all dams, tranverse the tree or add node. In adding node function user need to take interative to put the name of the existing leaf node to attach to (parentName). New node type: exactly "dam" or "tributary". If "dam": dam name (damName).If "tributary":
+Tributary name (tribName)
+Length in kilometers or miles (integer)
+Basin size (integer)
+Average discharge (integer)
+Success or failure message indicating whether the new node was attached.
+
+-State Changes:
+
+On success:
+
+A new RiverNode object is allocated and linked into the tree as a child of the specified parent leaf. The parent’s child list (or pointer) is updated to reference the new node.
+
+On failure or cancellation:
+No modification of the tree structure. If a RiverNode was allocated before failure, it is deleted to prevent memory leaks.
+
+-Cases & Expected Behavior:
+
+Valid dam addition
+User enters the name of an existing leaf (e.g. "Spokane River"). User enters "dam" when prompted for type.
+
+User provides a nonempty dam name.
+
+add_node returns true. And user could see the node add sccessfully.
+
+Result: Console prints
+Node "Grand Coulee" added successfully under "Spokane River".
+Tree state: "Grand Coulee" appears as a child of "Spokane River".
+
+Valid tributary addition
+User enters the name of an existing leaf (e.g. "Yakima River").
+User enters "tributary" when prompted for type.
+
+User provides valid integers for length, basin size, and discharge.
+add_node returns true.
+
+Result:
+
+Node "Taneum Creek" added successfully under "Yakima River".
+Tree state: A new tributary node with the supplied properties is attached.
+
+Nonexistent parent name
+User types a leaf name that doesn’t exist (e.g. "Unknown River").
+find_node returns nullptr.
+
+Result:
+No node found with name "Unknown River". Operation canceled.
+Tree state: Unchanged.
+
+Invalid type entered
+User enters a string other than "dam" or "tributary" (e.g. "river").
+
+Code enters the else branch.
+
+Result:
+
+Invalid type entered. Operation canceled.
+Tree state: Unchanged.
+
+Failure of add_node despite valid input
+All prompts completed correctly, but the underlying add_node call returns false (e.g., parent already has maximum children or memory allocation failed).
+
+Result:
+Failed to attach node to "Spokane River".
+Afterwards: The newly allocated node is deleted and tree remains as before.
 

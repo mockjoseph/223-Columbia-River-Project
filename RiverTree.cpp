@@ -1,5 +1,8 @@
 #include "RiverTree.hpp"
 #include <iostream>
+#include <vector>
+#include <queue>
+#include <limits>
 
 
 // Default constructor, normally should never be used
@@ -252,4 +255,82 @@ int RiverTree::calculate_height(RiverNode* root) {
     return std::max(left_height, right_height) + 1; // Height of the tree is max of left and right subtree heights + 1 for the current node
 }
 
+static void collect_leaf_names(RiverNode* node, std::vector<std::string>& leaves) {
+    if (!node) return;
+    if (node->left == nullptr && node->right == nullptr) {
+        leaves.push_back(node->name);
+    } else {
+        collect_leaf_names(node->left, leaves);
+        collect_leaf_names(node->right, leaves);
+    }
+}
 
+void RiverTree::add_node_interactive() {
+    // List all current leaf nodes
+    std::vector<std::string> leaves;
+    collect_leaf_names(root, leaves);
+    std::cout << "Current leaf nodes:\n";
+    for (const auto& name : leaves) {
+        std::cout << "  - " << name << "\n";
+    }
+
+    // Prompt for the parent (leaf) to attach to
+    std::cout << "Enter the name of the leaf node to attach to: ";
+    std::string parentName;
+    std::getline(std::cin, parentName);
+
+    RiverNode* parentNode = find_node(root, parentName);
+    if (!parentNode) {
+        std::cout << "No node found with name \"" << parentName << "\". Operation canceled.\n";
+        return;
+    }
+
+    // Prompt for new node type
+    std::cout << "Enter new node type (\"dam\" or \"tributary\"): ";
+    std::string type;
+    std::getline(std::cin, type);
+
+    // Collect properties and construct the new node
+    RiverNode* newNode = nullptr;
+    if (type == "dam") {
+        std::cout << "Enter dam name: ";
+        std::string damName;
+        std::getline(std::cin, damName);
+        newNode = new RiverNode(damName, parentName);
+
+    } else if (type == "tributary") {
+        std::cout << "Enter tributary name: ";
+        std::string tribName;
+        std::getline(std::cin, tribName);
+
+        std::cout << "Enter length (integer): ";
+        int length;  
+        std::cin >> length;  
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        std::cout << "Enter basin size (integer): ";
+        int basinSize;  
+        std::cin >> basinSize;  
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        std::cout << "Enter average discharge (integer): ";
+        int avgDischarge;  
+        std::cin >> avgDischarge;  
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        newNode = new RiverNode(tribName, length, basinSize, avgDischarge, parentName);
+
+    } else {
+        std::cout << "Invalid type entered. Operation canceled.\n";
+        return;
+    }
+
+    // Attempt to add and report result
+    if (add_node(root, newNode)) {
+        std::cout << "Node \"" << newNode->name << "\" added successfully under \"" 
+                  << parentName << "\".\n";
+    } else {
+        std::cout << "Failed to attach node to \"" << parentName << "\".\n";
+        delete newNode;
+    }
+}
